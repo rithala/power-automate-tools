@@ -1,0 +1,2461 @@
+{
+    "$id": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Logic App Template Schema",
+    "description": "The workflow.",
+    "type": "object",
+    "properties": {
+        "actions": {
+            "type": "object",
+            "additionalProperties": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "runAfter": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Aborted",
+                                            "Cancelled",
+                                            "Failed",
+                                            "Faulted",
+                                            "Ignored",
+                                            "Paused",
+                                            "Running",
+                                            "Skipped",
+                                            "Succeeded",
+                                            "Suspended",
+                                            "TimedOut",
+                                            "Waiting"
+                                        ],
+                                        "description": "The status of a flow."
+                                    }
+                                },
+                                "description": "The operation run after."
+                            },
+                            "trackedProperties": {
+                                "description": "The tracked properties."
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "metadata": {
+                                "description": "The operation metadata."
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "ApiConnection",
+                                    "ApiConnectionWebhook",
+                                    "ApiManagement",
+                                    "AppendToArrayVariable",
+                                    "AppendToStringVariable",
+                                    "Batch",
+                                    "Compose",
+                                    "DecrementVariable",
+                                    "Expression",
+                                    "FlatFileDecoding",
+                                    "FlatFileEncoding",
+                                    "Foreach",
+                                    "Function",
+                                    "Http",
+                                    "HttpWebhook",
+                                    "If",
+                                    "IncrementVariable",
+                                    "InitializeVariable",
+                                    "IntegrationAccountArtifactLookup",
+                                    "Join",
+                                    "Liquid",
+                                    "ParseJson",
+                                    "Query",
+                                    "Recurrence",
+                                    "Request",
+                                    "Response",
+                                    "Scope",
+                                    "Select",
+                                    "SendToBatch",
+                                    "SetVariable",
+                                    "SlidingWindow",
+                                    "Switch",
+                                    "Table",
+                                    "Terminate",
+                                    "Until",
+                                    "Wait",
+                                    "Workflow",
+                                    "XmlValidation",
+                                    "Xslt"
+                                ],
+                                "description": "The type of the flow operation."
+                            },
+                            "kind": {
+                                "type": "string",
+                                "enum": [
+                                    "AddToTime",
+                                    "Alert",
+                                    "ApiConnection",
+                                    "AzureMonitorAlert",
+                                    "Button",
+                                    "ConvertTimeZone",
+                                    "CurrentTime",
+                                    "EventGrid",
+                                    "Geofence",
+                                    "GetFutureTime",
+                                    "GetPastTime",
+                                    "Http",
+                                    "JsonToJson",
+                                    "JsonToText",
+                                    "PowerApp",
+                                    "SecurityCenterAlert",
+                                    "SubtractFromTime",
+                                    "XmlToJson",
+                                    "XmlToText"
+                                ],
+                                "description": "The kind of the flow operation."
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "The operation description."
+                            },
+                            "operationOptions": {
+                                "type": "string",
+                                "description": "The operation options."
+                            },
+                            "runtimeConfiguration": {
+                                "type": "object",
+                                "properties": {
+                                    "paginationPolicy": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/1/properties/runtimeConfiguration/definitions/FlowPaginationPolicy"
+                                    },
+                                    "contentTransfer": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/1/properties/runtimeConfiguration/definitions/FlowContentTransferConfiguration"
+                                    },
+                                    "concurrency": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/1/properties/runtimeConfiguration/definitions/FlowConcurrencyConfiguration"
+                                    }
+                                },
+                                "description": "The flow template operation runtime configuration.",
+                                "definitions": {
+                                    "FlowConcurrencyConfiguration": {
+                                        "type": "object",
+                                        "properties": {
+                                            "repetitions": {
+                                                "type": "integer",
+                                                "description": "The repetitions."
+                                            },
+                                            "runs": {
+                                                "type": "integer",
+                                                "description": "The runs."
+                                            },
+                                            "maximumWaitingRuns": {
+                                                "type": "integer",
+                                                "description": "The maximum waiting runs."
+                                            }
+                                        },
+                                        "description": "The flow concurrency configuration."
+                                    },
+                                    "FlowContentTransferConfiguration": {
+                                        "type": "object",
+                                        "properties": {
+                                            "transferMode": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/1/properties/runtimeConfiguration/definitions/FlowContentTransferMode"
+                                            }
+                                        },
+                                        "description": "The flow content transfer configuration."
+                                    },
+                                    "FlowContentTransferMode": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Chunked"
+                                        ],
+                                        "description": "The flow content transfer mode."
+                                    },
+                                    "FlowPaginationPolicy": {
+                                        "type": "object",
+                                        "properties": {
+                                            "minimumItemCount": {
+                                                "type": "integer",
+                                                "description": "The minimum item count."
+                                            }
+                                        },
+                                        "description": "The flow pagination policy."
+                                    }
+                                }
+                            }
+                        },
+                        "required": [
+                            "type"
+                        ]
+                    },
+                    {
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "ApiConnection"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "host": {
+                                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/7/properties/inputs/properties/host"
+                                                    },
+                                                    "method": {
+                                                        "type": "string",
+                                                        "default": "POST",
+                                                        "description": "The method of the request."
+                                                    },
+                                                    "path": {
+                                                        "type": "string",
+                                                        "description": "The path for the request."
+                                                    },
+                                                    "queries": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/properties/queries"
+                                                    },
+                                                    "body": {
+                                                        "description": "The body of the request."
+                                                    },
+                                                    "headers": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/21/properties/inputs/properties/headers"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "host",
+                                                    "path"
+                                                ]
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "operationOptions": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/1/properties/operationOptions"
+                                                    },
+                                                    "retryPolicy": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "type": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "None",
+                                                                    "Fixed",
+                                                                    "Exponential"
+                                                                ],
+                                                                "description": "The type of retry policy to use."
+                                                            },
+                                                            "interval": {
+                                                                "type": "string",
+                                                                "description": "The interval between retries."
+                                                            },
+                                                            "count": {
+                                                                "type": "integer",
+                                                                "description": "The number of times a retry should be attempted."
+                                                            },
+                                                            "minimumInterval": {
+                                                                "type": "string",
+                                                                "description": "The minimum time delay for the exponential retry."
+                                                            },
+                                                            "maximumInterval": {
+                                                                "type": "string",
+                                                                "description": "The maximum time delay for the exponential retry."
+                                                            }
+                                                        },
+                                                        "description": "The retry policy."
+                                                    },
+                                                    "authentication": {
+                                                        "oneOf": [
+                                                            {
+                                                                "type": "string",
+                                                                "description": "A Logic Apps expression."
+                                                            },
+                                                            {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "Basic"
+                                                                        ],
+                                                                        "description": "The HTTP authentication type."
+                                                                    },
+                                                                    "username": {
+                                                                        "type": "string",
+                                                                        "description": "The username."
+                                                                    },
+                                                                    "password": {
+                                                                        "type": "string",
+                                                                        "description": "The password."
+                                                                    }
+                                                                },
+                                                                "description": "The HTTP basic authentication."
+                                                            },
+                                                            {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "ClientCertificate"
+                                                                        ],
+                                                                        "description": "The HTTP authentication type."
+                                                                    },
+                                                                    "password": {
+                                                                        "type": "string",
+                                                                        "description": "The password."
+                                                                    },
+                                                                    "pfx": {
+                                                                        "type": "string",
+                                                                        "description": "The PFX."
+                                                                    }
+                                                                },
+                                                                "description": "The HTTP client certificate authentication."
+                                                            },
+                                                            {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "None"
+                                                                        ],
+                                                                        "description": "The HTTP authentication type."
+                                                                    }
+                                                                },
+                                                                "additionalProperties": false,
+                                                                "description": "No HTTP authentication."
+                                                            },
+                                                            {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "ActiveDirectoryOAuth"
+                                                                        ],
+                                                                        "description": "The HTTP authentication type."
+                                                                    },
+                                                                    "authority": {
+                                                                        "type": "string",
+                                                                        "description": "The authority."
+                                                                    },
+                                                                    "tenant": {
+                                                                        "type": "string",
+                                                                        "description": "The tenant ID."
+                                                                    },
+                                                                    "audience": {
+                                                                        "type": "string",
+                                                                        "description": "The audience."
+                                                                    },
+                                                                    "clientId": {
+                                                                        "type": "string",
+                                                                        "description": "The client ID."
+                                                                    },
+                                                                    "secret": {
+                                                                        "type": "string",
+                                                                        "description": "The secret."
+                                                                    },
+                                                                    "pfx": {
+                                                                        "type": "string",
+                                                                        "description": "The PFX."
+                                                                    },
+                                                                    "password": {
+                                                                        "type": "string",
+                                                                        "description": "The password used to decrypt the PFX."
+                                                                    }
+                                                                },
+                                                                "description": "The HTTP OAuth authentication."
+                                                            },
+                                                            {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "Raw"
+                                                                        ],
+                                                                        "description": "The HTTP authentication type."
+                                                                    },
+                                                                    "scheme": {
+                                                                        "type": "string",
+                                                                        "description": "The raw authentication scheme."
+                                                                    },
+                                                                    "parameter": {
+                                                                        "type": "string",
+                                                                        "description": "The raw authentication parameter."
+                                                                    },
+                                                                    "value": {
+                                                                        "type": "string",
+                                                                        "description": "The raw authentication value."
+                                                                    }
+                                                                },
+                                                                "description": "The HTTP raw authentication."
+                                                            }
+                                                        ],
+                                                        "description": "The HTTP authentication."
+                                                    }
+                                                },
+                                                "description": "The retryable action input."
+                                            }
+                                        ],
+                                        "description": "The ApiConnection operation input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "ApiConnectionWebhook"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/0/properties/inputs"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "schema": {
+                                                        "description": "The schema of an API connection webhook operation."
+                                                    },
+                                                    "accessKeyType": {
+                                                        "type": "string",
+                                                        "enum": [
+                                                            "Primary",
+                                                            "Secondary"
+                                                        ],
+                                                        "description": "The access key type."
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "description": "The API connection webhook operation input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "ApiManagement"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/0/properties/inputs/allOf/1"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "api": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/2/properties/inputs/definitions/ApiManagementApiReference"
+                                                    },
+                                                    "method": {
+                                                        "type": "string",
+                                                        "description": "The method of the request."
+                                                    },
+                                                    "pathTemplate": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/2/properties/inputs/definitions/PathTemplate"
+                                                    },
+                                                    "queries": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/properties/queries"
+                                                    },
+                                                    "body": {
+                                                        "description": "The body of the request."
+                                                    },
+                                                    "subscriptionKey": {
+                                                        "type": "string",
+                                                        "description": "The subscription key."
+                                                    },
+                                                    "headers": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/21/properties/inputs/properties/headers"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "api",
+                                                    "pathTemplate"
+                                                ]
+                                            }
+                                        ],
+                                        "description": "The API Management operation input.",
+                                        "definitions": {
+                                            "ApiManagementApiReference": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/definitions/FunctionReference/allOf/0"
+                                                    }
+                                                ],
+                                                "description": "The API Management API reference."
+                                            },
+                                            "PathTemplate": {
+                                                "description": "The path template for the request."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "SendToBatch"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/0/properties/inputs/allOf/1"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "host": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "workflow": {
+                                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/3/properties/inputs/allOf/1/properties/host/definitions/FlowReference"
+                                                            },
+                                                            "triggerName": {
+                                                                "type": "string",
+                                                                "description": "The trigger name."
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "triggerName",
+                                                            "workflow"
+                                                        ],
+                                                        "description": "The workflow host.",
+                                                        "definitions": {
+                                                            "FlowReference": {
+                                                                "allOf": [
+                                                                    {
+                                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/definitions/FunctionReference/allOf/0"
+                                                                    },
+                                                                    {
+                                                                        "required": [
+                                                                            "id"
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "description": "The flow reference."
+                                                            }
+                                                        }
+                                                    },
+                                                    "batchName": {
+                                                        "type": "string",
+                                                        "description": "The batch name."
+                                                    },
+                                                    "partitionName": {
+                                                        "type": "string",
+                                                        "description": "The partition name."
+                                                    },
+                                                    "messageId": {
+                                                        "type": "string",
+                                                        "description": "The message identifier."
+                                                    },
+                                                    "content": {
+                                                        "description": "The content."
+                                                    }
+                                                },
+                                                "required": [
+                                                    "host",
+                                                    "batchName",
+                                                    "content"
+                                                ]
+                                            }
+                                        ],
+                                        "description": "The Send to Batch action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Compose"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "description": "The Compose action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Expression"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "enum": [
+                                            "AddToTime"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "baseTime": {
+                                                "type": "string",
+                                                "description": "The base time."
+                                            },
+                                            "interval": {
+                                                "type": "integer",
+                                                "description": "The interval of time."
+                                            },
+                                            "timeUnit": {
+                                                "type": "string",
+                                                "description": "The unit of time specified."
+                                            }
+                                        },
+                                        "required": [
+                                            "baseTime",
+                                            "interval",
+                                            "timeUnit"
+                                        ],
+                                        "description": "The inputs for the add to time or subtract from time operation kinds."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Expression"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "enum": [
+                                            "ConvertTimeZone"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "baseTime": {
+                                                "type": "string",
+                                                "description": "The base time."
+                                            },
+                                            "sourceTimeZone": {
+                                                "type": "string",
+                                                "description": "The time zone to convert from."
+                                            },
+                                            "destinationTimeZone": {
+                                                "type": "string",
+                                                "description": "The time zone to convert to."
+                                            },
+                                            "formatString": {
+                                                "type": "string",
+                                                "description": "The date time format string."
+                                            }
+                                        },
+                                        "required": [
+                                            "baseTime",
+                                            "sourceTimeZone",
+                                            "destinationTimeZone"
+                                        ],
+                                        "description": "The convert time zone operation kind input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Expression"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "enum": [
+                                            "CurrentTime"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "additionalProperties": false
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Expression"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "enum": [
+                                            "GetFutureTime"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "interval": {
+                                                "type": "integer",
+                                                "description": "The interval of time."
+                                            },
+                                            "timeUnit": {
+                                                "type": "string",
+                                                "description": "The unit of time specified."
+                                            }
+                                        },
+                                        "required": [
+                                            "interval",
+                                            "timeUnit"
+                                        ],
+                                        "description": "The inputs for the get future time and get past time operation kinds."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Expression"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "enum": [
+                                            "GetPastTime"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/8/properties/inputs"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Expression"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "enum": [
+                                            "SubtractFromTime"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/5/properties/inputs"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "FlatFileDecoding"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/0/properties/inputs/allOf/1"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "content": {
+                                                        "description": "The content."
+                                                    },
+                                                    "integrationAccount": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "schema": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "name": {
+                                                                        "type": "string",
+                                                                        "description": "The name."
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "name"
+                                                                ],
+                                                                "description": "The artifact information."
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "schema"
+                                                        ],
+                                                        "description": "The integration account schema information."
+                                                    }
+                                                },
+                                                "required": [
+                                                    "content",
+                                                    "integrationAccount"
+                                                ]
+                                            }
+                                        ],
+                                        "description": "The content and schema action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "FlatFileEncoding"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/11/properties/inputs"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "emptyNodeGenerationMode": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/12/properties/inputs/definitions/EmptyNodeGenerationMode"
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "description": "The flat file encoding action input.",
+                                        "definitions": {
+                                            "EmptyNodeGenerationMode": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "ForcedDisabled",
+                                                    "ForcedEnabled",
+                                                    "HonorSchemaNodeProperty"
+                                                ],
+                                                "description": "The empty node generation mode."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Function"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "allOf": [
+                                            {
+                                                "properties": {
+                                                    "function": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/definitions/FunctionReference"
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "properties": {
+                                                    "functionApp": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/definitions/FunctionAppReference"
+                                                    },
+                                                    "uri": {
+                                                        "type": "string",
+                                                        "description": "The operation URI as defined in the function app Swagger."
+                                                    }
+                                                }
+                                            }
+                                        ],
+                                        "properties": {
+                                            "method": {
+                                                "type": "string",
+                                                "description": "The method of the request."
+                                            },
+                                            "queries": {
+                                                "type": "object",
+                                                "additionalProperties": {
+                                                    "anyOf": [
+                                                        {
+                                                            "type": "boolean"
+                                                        },
+                                                        {
+                                                            "type": "integer"
+                                                        },
+                                                        {
+                                                            "type": "null"
+                                                        },
+                                                        {
+                                                            "type": "number"
+                                                        },
+                                                        {
+                                                            "type": "string"
+                                                        }
+                                                    ]
+                                                },
+                                                "description": "The queries for the request."
+                                            },
+                                            "body": {
+                                                "description": "The body of the request."
+                                            },
+                                            "headers": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/21/properties/inputs/properties/headers"
+                                            }
+                                        },
+                                        "description": "The function action input.",
+                                        "definitions": {
+                                            "FunctionAppReference": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/definitions/FunctionReference/allOf/0"
+                                                    }
+                                                ],
+                                                "description": "The function app reference."
+                                            },
+                                            "FunctionReference": {
+                                                "allOf": [
+                                                    {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "description": "The resource reference identifier."
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "description": "The resource reference name."
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "description": "The resource reference type."
+                                                            }
+                                                        },
+                                                        "description": "The base resource reference."
+                                                    }
+                                                ],
+                                                "description": "The function reference."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Http"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/4/properties/inputs"
+                                    }
+                                }
+                            },
+                            {
+                                "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/5"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "IntegrationAccountArtifactLookup"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "artifactType": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/16/properties/inputs/definitions/ArtifactType"
+                                            },
+                                            "artifaceName": {
+                                                "type": "string",
+                                                "description": "The name of the artifact."
+                                            }
+                                        },
+                                        "description": "The integration account artifact lookup input.",
+                                        "definitions": {
+                                            "ArtifactType": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "Schema",
+                                                    "Map",
+                                                    "Partner",
+                                                    "Agreement"
+                                                ],
+                                                "description": "The type of artifact."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Join"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "from": {
+                                                "type": [
+                                                    "array",
+                                                    "string"
+                                                ],
+                                                "description": "The source."
+                                            },
+                                            "joinWith": {
+                                                "type": "string",
+                                                "description": "The separator."
+                                            }
+                                        },
+                                        "required": [
+                                            "from"
+                                        ],
+                                        "description": "The Join action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Liquid"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "enum": [
+                                            "JsonToJson",
+                                            "JsonToText",
+                                            "XmlToJson",
+                                            "XmlToText"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "content": {
+                                                "description": "The content."
+                                            },
+                                            "integrationAccount": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "map": {
+                                                        "#ref": "common/ArtifactInformation.json"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "map"
+                                                ],
+                                                "description": "The integration account map information."
+                                            },
+                                            "transformedContentSchema": {
+                                                "$schema": "http://json-schema.org/draft-04/schema#"
+                                            }
+                                        },
+                                        "required": [
+                                            "content",
+                                            "integrationAccount"
+                                        ],
+                                        "description": "The liquid action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "ParseJson"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "content": {
+                                                "description": "The content."
+                                            },
+                                            "schema": {
+                                                "$schema": "http://json-schema.org/draft-04/schema#"
+                                            }
+                                        },
+                                        "description": "The Parse JSON action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Query"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "from": {
+                                                "type": [
+                                                    "array",
+                                                    "string"
+                                                ],
+                                                "description": "The source."
+                                            },
+                                            "where": {
+                                                "type": "string",
+                                                "description": "The where condition."
+                                            }
+                                        },
+                                        "required": [
+                                            "from"
+                                        ],
+                                        "description": "The query action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Response"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "statusCode": {
+                                                "type": [
+                                                    "integer",
+                                                    "string"
+                                                ],
+                                                "description": "The status code for the response."
+                                            },
+                                            "headers": {
+                                                "oneOf": [
+                                                    {
+                                                        "type": "string"
+                                                    },
+                                                    {
+                                                        "type": "object",
+                                                        "additionalProperties": {
+                                                            "anyOf": [
+                                                                {
+                                                                    "type": "boolean"
+                                                                },
+                                                                {
+                                                                    "type": "integer"
+                                                                },
+                                                                {
+                                                                    "type": "null"
+                                                                },
+                                                                {
+                                                                    "type": "number"
+                                                                },
+                                                                {
+                                                                    "type": "string"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "description": "The headers for the request."
+                                            },
+                                            "body": {
+                                                "description": "The body of the response."
+                                            },
+                                            "schema": {
+                                                "$schema": "http://json-schema.org/draft-04/schema#"
+                                            }
+                                        },
+                                        "required": [
+                                            "statusCode"
+                                        ],
+                                        "description": "The response action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Foreach"
+                                        ]
+                                    },
+                                    "actions": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/25/properties/default"
+                                    },
+                                    "foreach": {
+                                        "type": [
+                                            "array",
+                                            "string"
+                                        ],
+                                        "description": "The For Each expression."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "If"
+                                        ]
+                                    },
+                                    "actions": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/25/properties/default"
+                                    },
+                                    "else": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/23/definitions/IfElseProperty"
+                                    },
+                                    "expression": {
+                                        "anyOf": [
+                                            {
+                                                "type": "string"
+                                            },
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/23/definitions/IfExpressionObjectProperty"
+                                            }
+                                        ],
+                                        "description": "The If expression."
+                                    }
+                                },
+                                "definitions": {
+                                    "IfElseProperty": {
+                                        "type": "object",
+                                        "properties": {
+                                            "actions": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/25/properties/default"
+                                            }
+                                        }
+                                    },
+                                    "IfExpressionObjectProperty": {
+                                        "description": "The If object expression property.",
+                                        "$comment": "TODO(joechung): Find out what the schema is for If expression objects."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Scope"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "actions": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/25/properties/default"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Switch"
+                                        ]
+                                    },
+                                    "cases": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/25/definitions/FlowTemplateActionCaseBranch"
+                                        },
+                                        "description": "The Switch action case branches."
+                                    },
+                                    "default": {
+                                        "type": "object",
+                                        "properties": {
+                                            "actions": {
+                                                "type": "object",
+                                                "additionalProperties": {
+                                                    "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/25/properties/default"
+                                                },
+                                                "description": "The actions."
+                                            }
+                                        },
+                                        "description": "The flow template action branch."
+                                    },
+                                    "expression": {
+                                        "type": [
+                                            "number",
+                                            "string"
+                                        ],
+                                        "description": "The Switch expression."
+                                    }
+                                },
+                                "definitions": {
+                                    "FlowTemplateActionCaseBranch": {
+                                        "type": "object",
+                                        "properties": {
+                                            "case": {
+                                                "description": "The case."
+                                            },
+                                            "actions": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/25/properties/default"
+                                            }
+                                        },
+                                        "required": [
+                                            "case"
+                                        ],
+                                        "description": "The flow template action case branch."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Until"
+                                        ]
+                                    },
+                                    "actions": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/25/properties/default"
+                                    },
+                                    "expression": {
+                                        "type": "string",
+                                        "description": "The Until expression."
+                                    },
+                                    "limit": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/26/definitions/UntilLimitProperty"
+                                    }
+                                },
+                                "definitions": {
+                                    "UntilLimitProperty": {
+                                        "type": "object",
+                                        "properties": {
+                                            "count": {
+                                                "type": [
+                                                    "number",
+                                                    "string"
+                                                ],
+                                                "description": "The until count limit."
+                                            },
+                                            "timeout": {
+                                                "type": "string",
+                                                "description": "The until timeout limit."
+                                            }
+                                        },
+                                        "description": "The Until limits."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Select"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "from": {
+                                                "type": [
+                                                    "array",
+                                                    "string"
+                                                ],
+                                                "description": "The select source."
+                                            },
+                                            "select": {
+                                                "description": "The select transform."
+                                            }
+                                        },
+                                        "required": [
+                                            "from",
+                                            "select"
+                                        ],
+                                        "description": "The Select action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Table"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "from": {
+                                                "type": [
+                                                    "array",
+                                                    "string"
+                                                ],
+                                                "description": "The source."
+                                            },
+                                            "format": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/28/properties/inputs/definitions/TableFormat"
+                                            },
+                                            "columns": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/28/properties/inputs/definitions/TableColumn"
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "from"
+                                        ],
+                                        "description": "The table action input.",
+                                        "definitions": {
+                                            "TableColumn": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "header": {
+                                                        "type": "string",
+                                                        "description": "The header."
+                                                    },
+                                                    "value": {
+                                                        "description": "The value."
+                                                    }
+                                                },
+                                                "description": "The table column."
+                                            },
+                                            "TableFormat": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "CSV",
+                                                    "HTML"
+                                                ],
+                                                "description": "The table format."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Terminate"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "runStatus": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/0/properties/runAfter/additionalProperties/items"
+                                                    },
+                                                    {
+                                                        "enum": [
+                                                            "Cancelled",
+                                                            "Failed",
+                                                            "Succeeded"
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            "runError": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/29/properties/inputs/definitions/TerminateActionRunError"
+                                            }
+                                        },
+                                        "description": "The Terminate action input.",
+                                        "definitions": {
+                                            "TerminateActionRunError": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "code": {
+                                                        "type": [
+                                                            "number",
+                                                            "string"
+                                                        ],
+                                                        "description": "The code."
+                                                    },
+                                                    "message": {
+                                                        "type": "string",
+                                                        "description": "The message."
+                                                    }
+                                                },
+                                                "description": "The run error."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "AppendToArrayVariable"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/33/properties/inputs"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "AppendToStringVariable"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/33/properties/inputs"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "DecrementVariable"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/33/properties/inputs"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "IncrementVariable"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "description": "The name."
+                                            },
+                                            "type": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/33/properties/inputs/definitions/FlowVariableDataType"
+                                            },
+                                            "value": {
+                                                "description": "The variable value."
+                                            }
+                                        },
+                                        "description": "The variable action input.",
+                                        "definitions": {
+                                            "FlowVariableDataType": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "Array",
+                                                    "Boolean",
+                                                    "Float",
+                                                    "Integer",
+                                                    "Object",
+                                                    "String"
+                                                ],
+                                                "description": "The flow variable data type."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "InitializeVariable"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "variables": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/33/properties/inputs"
+                                                },
+                                                "maxItems": 1,
+                                                "minItems": 1
+                                            }
+                                        },
+                                        "description": "The Initialize Variable action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "SetVariable"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/33/properties/inputs"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Wait"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "interval": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/36/properties/inputs/definitions/TimeInterval"
+                                            },
+                                            "until": {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/36/properties/inputs/definitions/WaitUntil"
+                                            }
+                                        },
+                                        "maxProperties": 1,
+                                        "description": "The Wait action input.",
+                                        "definitions": {
+                                            "TimeInterval": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "unit": {
+                                                        "allOf": [
+                                                            {
+                                                                "description": "The wait unit."
+                                                            },
+                                                            {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "Second",
+                                                                    "Minute",
+                                                                    "Hour",
+                                                                    "Day",
+                                                                    "Week",
+                                                                    "Month",
+                                                                    "Year"
+                                                                ]
+                                                            }
+                                                        ]
+                                                    },
+                                                    "count": {
+                                                        "type": "integer",
+                                                        "description": "The wait count."
+                                                    }
+                                                },
+                                                "description": "The wait interval."
+                                            },
+                                            "WaitUntil": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "timestamp": {
+                                                        "type": "string",
+                                                        "description": "The timestamp."
+                                                    }
+                                                },
+                                                "description": "The Until."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Workflow"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/0/properties/inputs/allOf/1"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "host": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/3/properties/inputs/allOf/1/properties/host"
+                                                    },
+                                                    "body": {
+                                                        "description": "The body of the request."
+                                                    },
+                                                    "headers": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/21/properties/inputs/properties/headers"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "host"
+                                                ]
+                                            }
+                                        ],
+                                        "description": "The flow action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "XmlValidation"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/11/properties/inputs"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Xslt"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/0/properties/inputs/allOf/1"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "content": {
+                                                        "description": "The content."
+                                                    },
+                                                    "parameters": {
+                                                        "type": "object",
+                                                        "additionalProperties": {
+                                                            "type": "string"
+                                                        },
+                                                        "description": "The XSLT (Extensible Stylesheet Language Transformations) parameters."
+                                                    },
+                                                    "integrationAccount": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/18/properties/inputs/properties/integrationAccount"
+                                                    },
+                                                    "function": {
+                                                        "allOf": [
+                                                            {
+                                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/definitions/FunctionReference/allOf/0"
+                                                            }
+                                                        ],
+                                                        "description": "The function reference."
+                                                    },
+                                                    "transformOptions": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/39/properties/inputs/definitions/XsltTransformOptions"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "content"
+                                                ]
+                                            }
+                                        ],
+                                        "description": "The XSLT (Extensible Stylesheet Language Transformations) action input.",
+                                        "definitions": {
+                                            "XsltTransformOptions": {
+                                                "type": "string",
+                                                "description": "The XSLT options flag."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "description": "A flow template action.",
+                "definitions": {
+                    "FlowTemplateActionBranch": {
+                        "type": "object",
+                        "properties": {
+                            "actions": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "$ref": "#/properties/actions/additionalProperties"
+                                },
+                                "description": "The actions."
+                            }
+                        },
+                        "description": "The flow template action branch."
+                    },
+                    "FlowTemplateActionCaseBranch": {
+                        "allOf": [
+                            {
+                                "$ref": "#/properties/actions/additionalProperties/definitions/FlowTemplateActionBranch"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "case": {
+                                        "description": "The case."
+                                    }
+                                },
+                                "required": [
+                                    "case"
+                                ],
+                                "description": "The flow template action case branch."
+                            }
+                        ]
+                    },
+                    "FlowTemplateActionUntil": {
+                        "type": "object",
+                        "properties": {
+                            "limit": {
+                                "description": "The do-until limit."
+                            },
+                            "conditions": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "expression": {
+                                            "type": "string",
+                                            "description": "The expression."
+                                        },
+                                        "dependsOn": {
+                                            "type": "string",
+                                            "description": "The dependency."
+                                        }
+                                    },
+                                    "description": "The template action expression condition."
+                                },
+                                "description": "The do-until conditions."
+                            }
+                        },
+                        "description": "The do-until policy."
+                    }
+                }
+            },
+            "description": "The flow run actions."
+        },
+        "metadata": {
+            "description": "The definition metadata."
+        },
+        "$schema": {
+            "enum": [
+                "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#"
+            ],
+            "type": "string",
+            "description": "The definition schema."
+        },
+        "contentVersion": {
+            "type": "string",
+            "pattern": "(^[0-9]+\\.[0-9]+\\.[0-9]+\\.[0-9]+$)",
+            "description": "The flow content version. Specify using a 4-digit format, e.g., 1.0.0.0"
+        },
+        "parameters": {
+            "type": "object",
+            "additionalProperties": {
+                "allOf": [
+                    {
+                        "$ref": "#/properties/outputs/additionalProperties/allOf/0"
+                    },
+                    {
+                        "properties": {
+                            "defaultValue": {
+                                "description": "The default parameter value."
+                            },
+                            "allowedValues": {
+                                "type": "array",
+                                "description": "The allowed parameter values."
+                            }
+                        },
+                        "description": "The flow input template parameter."
+                    }
+                ]
+            },
+            "description": "The flow parameters."
+        },
+        "triggers": {
+            "type": "object",
+            "additionalProperties": {
+                "allOf": [
+                    {
+                        "$ref": "#/properties/actions/additionalProperties/allOf/1"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "conditions": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/properties/actions/additionalProperties/definitions/FlowTemplateActionUntil/properties/conditions/items"
+                                },
+                                "description": "The operation conditions."
+                            },
+                            "splitOn": {
+                                "type": "string",
+                                "description": "The trigger split on."
+                            },
+                            "splitOnConfiguration": {
+                                "type": "object",
+                                "properties": {
+                                    "correlation": {
+                                        "type": "object",
+                                        "properties": {
+                                            "clientTrackingId": {
+                                                "type": "string",
+                                                "description": "The client tracking identifier."
+                                            }
+                                        },
+                                        "description": "The correlation properties."
+                                    }
+                                },
+                                "description": "The trigger SplitOn configuration."
+                            },
+                            "correlation": {
+                                "type": "object",
+                                "properties": {
+                                    "clientTrackingId": {
+                                        "type": "string",
+                                        "description": "The client tracking identifier."
+                                    }
+                                },
+                                "description": "The correlation properties."
+                            }
+                        }
+                    },
+                    {
+                        "oneOf": [
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "ApiConnection"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/0/properties/inputs"
+                                    },
+                                    "recurrence": {
+                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/6/properties/recurrence"
+                                    }
+                                }
+                            },
+                            {
+                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/1"
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "ApiManagement"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/2/properties/inputs"
+                                    },
+                                    "recurrence": {
+                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/6/properties/recurrence"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Batch"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "mode": {
+                                                "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/3/properties/inputs/definitions/BatchActionMode"
+                                            },
+                                            "batchGroupName": {
+                                                "type": "string",
+                                                "description": "The batch group name."
+                                            },
+                                            "configurations": {
+                                                "type": "object",
+                                                "additionalProperties": {
+                                                    "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/3/properties/inputs/definitions/BatchConfiguration"
+                                                },
+                                                "description": "The batch configurations."
+                                            }
+                                        },
+                                        "descripton": "The batch action input.",
+                                        "definitions": {
+                                            "BatchActionMode": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "Inline",
+                                                    "IntegrationAccount"
+                                                ],
+                                                "description": "The batch action mode."
+                                            },
+                                            "BatchConfiguration": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "releaseCriteria": {
+                                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/3/properties/inputs/definitions/BatchReleaseCriteria"
+                                                    }
+                                                },
+                                                "description": "The batch configuration."
+                                            },
+                                            "BatchReleaseCriteria": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "messageCount": {
+                                                        "type": "integer",
+                                                        "description": "The message count."
+                                                    },
+                                                    "batchSize": {
+                                                        "type": "integer",
+                                                        "description": "The batch size in bytes."
+                                                    },
+                                                    "recurrence": {
+                                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/6/properties/recurrence"
+                                                    }
+                                                },
+                                                "description": "The batch release criteria."
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Http"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/0/properties/inputs/allOf/1"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "uri": {
+                                                        "type": "string",
+                                                        "description": "The URI of the request."
+                                                    },
+                                                    "method": {
+                                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/7/properties/inputs/properties/method"
+                                                    },
+                                                    "queries": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/13/properties/inputs/properties/queries"
+                                                    },
+                                                    "cookie": {
+                                                        "type": "string",
+                                                        "description": "The cookie for the request."
+                                                    },
+                                                    "body": {
+                                                        "description": "The body of the request."
+                                                    },
+                                                    "headers": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/21/properties/inputs/properties/headers"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "method",
+                                                    "uri"
+                                                ]
+                                            }
+                                        ],
+                                        "description": "The HTTP action input."
+                                    },
+                                    "recurrence": {
+                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/6/properties/recurrence"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "HttpWebhook"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/7/properties/inputs"
+                                            },
+                                            {
+                                                "type": "object",
+                                                "properties": {
+                                                    "subscribe": {
+                                                        "anyOf": [
+                                                            {
+                                                                "$comment": "It is likely a bug that HTTP webhooks are allowed to put an arbitrary JSON value in the \"subscribe\" property."
+                                                            },
+                                                            {
+                                                                "type": "string"
+                                                            },
+                                                            {
+                                                                "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/4/properties/inputs"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "unsubscribe": {
+                                                        "anyOf": [
+                                                            {
+                                                                "$comment": "It is likely a bug that HTTP webhooks are allowed to put an arbitrary JSON value in the \"unsubscribe\" property."
+                                                            },
+                                                            {
+                                                                "type": "string"
+                                                            },
+                                                            {
+                                                                "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/4/properties/inputs"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "accessKeyType": {
+                                                        "$ref": "#/properties/actions/additionalProperties/allOf/2/oneOf/1/properties/inputs/allOf/1/properties/accessKeyType"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "subscribe"
+                                                ],
+                                                "description": "The HTTP webhook operation input.",
+                                                "$comment": "It is likely a bug that HTTP webhooks do not have to specify the \"unsubscribe\" property."
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "Recurrence"
+                                        ]
+                                    },
+                                    "recurrence": {
+                                        "type": "object",
+                                        "properties": {
+                                            "frequency": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "Second",
+                                                    "Minute",
+                                                    "Hour",
+                                                    "Day",
+                                                    "Week",
+                                                    "Month",
+                                                    "Year"
+                                                ],
+                                                "description": "The flow recurrence frequency."
+                                            },
+                                            "interval": {
+                                                "type": "integer",
+                                                "description": "The recurrence interval."
+                                            },
+                                            "count": {
+                                                "type": "integer",
+                                                "description": "The recurrence count."
+                                            },
+                                            "startTime": {
+                                                "type": "string",
+                                                "description": "The recurrence start time."
+                                            },
+                                            "endTime": {
+                                                "type": "string",
+                                                "description": "The recurrence end time."
+                                            },
+                                            "timeZone": {
+                                                "type": "string",
+                                                "description": "The recurrence time zone."
+                                            },
+                                            "schedule": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "minutes": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": [
+                                                                "integer",
+                                                                "string"
+                                                            ]
+                                                        },
+                                                        "description": "The minutes on which this job should fire."
+                                                    },
+                                                    "hours": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": [
+                                                                "integer",
+                                                                "string"
+                                                            ]
+                                                        },
+                                                        "description": "The hours on which this job should fire."
+                                                    },
+                                                    "weekDays": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "Friday",
+                                                                "Monday",
+                                                                "Saturday",
+                                                                "Sunday",
+                                                                "Thursday",
+                                                                "Tuesday",
+                                                                "Wednesday"
+                                                            ],
+                                                            "description": "Specifies the day of the week."
+                                                        },
+                                                        "description": "The days of the week on which this job should fire."
+                                                    },
+                                                    "monthDays": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "integer"
+                                                        },
+                                                        "description": "The days of the month on which this job should fire."
+                                                    },
+                                                    "monthlyOccurrences": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "dayOfWeek": {
+                                                                    "type": "string",
+                                                                    "enum": [
+                                                                        "Friday",
+                                                                        "Monday",
+                                                                        "Saturday",
+                                                                        "Sunday",
+                                                                        "Thursday",
+                                                                        "Tuesday",
+                                                                        "Wednesday"
+                                                                    ],
+                                                                    "description": "Specifies the day of the week."
+                                                                },
+                                                                "occurrence": {
+                                                                    "type": "integer",
+                                                                    "description": "Specifies the week count of this occurrence."
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "dayOfWeek",
+                                                                "occurrence"
+                                                            ],
+                                                            "description": "Indicates a day of week and a count of weeks from the beginning or end of the month on which the day occurs."
+                                                        },
+                                                        "description": "The monthly occurence on which this job should fire."
+                                                    }
+                                                },
+                                                "description": "The job recurrence schedule."
+                                            }
+                                        },
+                                        "required": [
+                                            "frequency",
+                                            "interval"
+                                        ],
+                                        "description": "The flow recurrence."
+                                    }
+                                },
+                                "required": [
+                                    "recurrence"
+                                ]
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "enum": [
+                                            "Request"
+                                        ]
+                                    },
+                                    "kind": {
+                                        "enum": [
+                                            "Alert",
+                                            "AzureMonitorAlert",
+                                            "Button",
+                                            "EventGrid",
+                                            "Geofence",
+                                            "Http",
+                                            "PowerApp",
+                                            "SecurityCenterAlert"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "host": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "api": {
+                                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/7/properties/inputs/properties/host/definitions/ApiConnectionProvider"
+                                                    }
+                                                },
+                                                "description": "The host.",
+                                                "definitions": {
+                                                    "ApiConnectionProvider": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "runtimeUrl": {
+                                                                "type": "string",
+                                                                "format": "uri"
+                                                            }
+                                                        },
+                                                        "description": "The API connection provider."
+                                                    }
+                                                }
+                                            },
+                                            "operationId": {
+                                                "type": "string",
+                                                "description": "The operation identifier."
+                                            },
+                                            "parameters": {
+                                                "type": "object",
+                                                "additionalItems": {},
+                                                "description": "The operation parameters."
+                                            },
+                                            "schema": {
+                                                "description": "The schema of the manual action input."
+                                            },
+                                            "relativePath": {
+                                                "type": "string",
+                                                "description": "The relative path."
+                                            },
+                                            "method": {
+                                                "type": "string",
+                                                "enum": [
+                                                    "DELETE",
+                                                    "GET",
+                                                    "HEAD",
+                                                    "OPTIONS",
+                                                    "PATCH",
+                                                    "POST",
+                                                    "PUT",
+                                                    "TRACE"
+                                                ],
+                                                "description": "The HTTP method."
+                                            }
+                                        },
+                                        "description": "The manual action input."
+                                    }
+                                }
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "SlidingWindow"
+                                        ]
+                                    },
+                                    "inputs": {
+                                        "type": "object",
+                                        "properties": {
+                                            "delay": {
+                                                "type": "string",
+                                                "description": "The delay."
+                                            }
+                                        },
+                                        "description": "The sliding window action input."
+                                    },
+                                    "recurrence": {
+                                        "$ref": "#/properties/triggers/additionalProperties/allOf/2/oneOf/6/properties/recurrence"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "description": "A flow template trigger."
+            },
+            "description": "The flow triggers."
+        },
+        "outputs": {
+            "type": "object",
+            "additionalProperties": {
+                "allOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "Array",
+                                    "Bool",
+                                    "Float",
+                                    "Int",
+                                    "Object",
+                                    "SecureObject",
+                                    "SecureString",
+                                    "String"
+                                ],
+                                "description": "The parameter type."
+                            },
+                            "value": {
+                                "description": "The parameter value."
+                            },
+                            "metadata": {
+                                "description": "The parameter metadata."
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "The parameter description."
+                            }
+                        },
+                        "description": "The flow template parameter."
+                    },
+                    {
+                        "properties": {
+                            "error": {
+                                "description": "The error of the output parameter."
+                            }
+                        }
+                    }
+                ],
+                "description": "The flow output template parameter."
+            },
+            "description": "The flow outputs."
+        },
+        "description": {
+            "type": "string",
+            "description": "The definition description."
+        }
+    },
+    "required": [
+        "$schema",
+        "contentVersion"
+    ]
+}

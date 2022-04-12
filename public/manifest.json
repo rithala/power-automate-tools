@@ -1,0 +1,27 @@
+{
+   "name": "Power Automate Tools",
+   "description": "This extension helps to work with Power Automate flows",
+   "version": "1.0",
+   "manifest_version": 3,
+   "icons": {
+      "512": "icons/icon512.png",
+      "192": "icons/icon192.png",
+      "32": "icons/icon32.png"
+   },
+   "permissions": [
+      "activeTab",
+      "scripting",
+      "webRequest",
+      "tabs"
+   ],
+   "host_permissions": [
+      "*://*.flow.microsoft.com/",
+      "https://login.microsoftonline.com/"
+   ],
+   "action": {
+      "default_title": "Power Automate Tools"
+   },
+   "background": {
+      "service_worker": "background.js"
+   }
+}
