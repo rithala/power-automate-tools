@@ -1,4 +1,4 @@
-import { MessageBarType } from '@fluentui/react';
+import { MessageBarType } from '@fluentui/react/lib/MessageBar';
 import { useEffect, useMemo, useState } from 'react';
 import { useMessageBar } from '../../common/components/Messages';
 import {
