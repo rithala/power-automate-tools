@@ -20,7 +20,7 @@ The reason behind creating this extension is constantly struggling with repetiti
 
 ## Getting started
 
-1. Get the extension from the Edge extensions store or download a [release](https://github.com/rithala/power-automate-tools/releases), unzip package, enable developer mode in your browser, and the exnsion as unpacked.
+1. Get the extension from the Edge extensions store or download a [release](https://github.com/rithala/power-automate-tools/releases), unzip the package, enable developer mode in your browser, and add the exnsion as unpacked.
 2. Open the flow details or edit page in the Power Automate portal.
 3. Click the extension icon.
 4. Edit your flow!
