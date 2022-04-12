@@ -40,14 +40,8 @@ chrome.action.onClicked.addListener((tab) => {
 chrome.tabs.onActivated.addListener((tabInfo) => {
   chrome.tabs.get(tabInfo.tabId, (tab) => {
     if (tab.url?.includes('flow.microsoft.com') && !state.appTabId) {
-      chrome.action.setIcon({
-        path: 'icons/icon32.png',
-      });
       chrome.action.enable();
     } else {
-      chrome.action.setIcon({
-        path: 'icons/icon_disabled32.png',
-      });
       chrome.action.disable();
     }
   });

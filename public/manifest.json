@@ -4,9 +4,10 @@
    "version": "1.0",
    "manifest_version": 3,
    "icons": {
-      "512": "icons/icon512.png",
-      "192": "icons/icon192.png",
-      "32": "icons/icon32.png"
+      "512": "icons/pa-tools-512.png",
+      "256": "icons/pa-tools-256.png",
+      "128": "icons/pa-tools-128.png",
+      "48": "icons/pa-tools-48.png"
    },
    "permissions": [
       "activeTab",
