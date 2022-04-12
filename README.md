@@ -1,3 +1,5 @@
+![Extension Logo](public/icons/pa-tools-128.png)
+
 # Power Automate Tools Extension
 
 ![Extension Screen Shot](static/pa-tools-extension.jpg)
