@@ -1,6 +1,6 @@
 {
    "name": "Power Automate Tools",
-   "description": "This extension helps to work with Power Automate flows",
+   "description": "This extension enables editing a Power Automate flow definition as JSON.",
    "version": "1.0",
    "manifest_version": 3,
    "icons": {
@@ -11,7 +11,6 @@
    },
    "permissions": [
       "activeTab",
-      "scripting",
       "webRequest",
       "tabs"
    ],
