@@ -1,15 +1,14 @@
-import { Actions } from './common/types/backgroundActions';
-import jwtDecode from 'jwt-decode';
+import { Actions } from "./common/types/backgroundActions";
+import jwtDecode from "jwt-decode";
 
 interface State {
   token?: string;
   url?: URL;
   initiatorTabId?: number;
   appTabId?: number;
-  environmentId?: string;
-  flowId?: string;
   apiUrl?: string;
   tokenExpires?: Date;
+  lastMatchedRequest?: { envId: string; flowId: string };
 }
 
 const state: State = {};
@@ -17,19 +16,15 @@ const state: State = {};
 chrome.action.disable();
 
 chrome.action.onClicked.addListener((tab) => {
-  state.environmentId = extractEnvId(tab);
-  state.flowId = extractFlowId(tab);
-
-  if (!state.environmentId || !state.flowId) {
+  if (!state.lastMatchedRequest) {
     return;
   }
 
-  state.initiatorTabId = tab.id;
   chrome.tabs.create(
     {
-      url: `${chrome.runtime.getURL('app.html')}${
-        state.environmentId ? `?envId=${state.environmentId}` : ''
-      }${state.flowId ? `&flowId=${state.flowId}` : ''}`,
+      url: `${chrome.runtime.getURL("app.html")}?envId=${
+        state.lastMatchedRequest.envId
+      }&flowId=${state.lastMatchedRequest.flowId}`,
     },
     (appTab) => {
       state.appTabId = appTab.id;
@@ -37,29 +32,18 @@ chrome.action.onClicked.addListener((tab) => {
   );
 });
 
-chrome.tabs.onActivated.addListener((tabInfo) => {
-  chrome.tabs.get(tabInfo.tabId, (tab) => {
-    if (tab.url?.includes('flow.microsoft.com') && !state.appTabId) {
-      chrome.action.enable();
-    } else {
-      chrome.action.disable();
-    }
-  });
-});
-
 chrome.tabs.onRemoved.addListener((tabId) => {
   if (state.appTabId === tabId) {
     delete state.appTabId;
-    delete state.initiatorTabId;
   }
 });
 
 chrome.webRequest.onBeforeSendHeaders.addListener(
   listenFlowApiRequests,
   {
-    urls: ['https://*.api.flow.microsoft.com/*'],
+    urls: ["https://*.api.flow.microsoft.com/*"],
   },
-  ['requestHeaders']
+  ["requestHeaders"]
 );
 
 chrome.runtime.onMessage.addListener(
@@ -69,11 +53,11 @@ chrome.runtime.onMessage.addListener(
         default:
           sendResponse();
           break;
-        case 'app-loaded':
+        case "app-loaded":
           sendResponse();
           sendTokenChanged();
           break;
-        case 'refresh':
+        case "refresh":
           sendResponse();
           refreshInitiator();
           break;
@@ -84,27 +68,10 @@ chrome.runtime.onMessage.addListener(
 
 function sendTokenChanged() {
   sendMessageToTab({
-    type: 'token-changed',
+    type: "token-changed",
     token: state.token!,
     apiUrl: state.apiUrl!,
   });
-}
-
-function extractEnvId(tab: chrome.tabs.Tab) {
-  return extractTokenFromUrl(tab, 'environments');
-}
-
-function extractFlowId(tab: chrome.tabs.Tab) {
-  return extractTokenFromUrl(tab, 'flows');
-}
-
-function extractTokenFromUrl(tab: chrome.tabs.Tab, tokenName: string) {
-  const token = tokenName + '/';
-  const tokenIndex = tab.url?.indexOf(token);
-
-  return tokenIndex !== -1
-    ? tab.url?.substring(tokenIndex! + token.length).split('/')[0]
-    : undefined;
 }
 
 function refreshInitiator() {
@@ -116,9 +83,11 @@ function refreshInitiator() {
 function listenFlowApiRequests(
   details: chrome.webRequest.WebRequestHeadersDetails
 ) {
-  if (!state.initiatorTabId || state.initiatorTabId === details.tabId) {
+  if (state.appTabId !== details.tabId) {
+    state.lastMatchedRequest = extractFlowDataFromUrl(details.url);
+
     const token = details.requestHeaders?.find(
-      (x) => x.name.toLowerCase() === 'authorization'
+      (x) => x.name.toLowerCase() === "authorization"
     )?.value;
 
     if (state.token !== token) {
@@ -133,6 +102,11 @@ function listenFlowApiRequests(
 
       sendTokenChanged();
     }
+
+    if (state.lastMatchedRequest) {
+      state.initiatorTabId = details.tabId;
+      chrome.action.enable();
+    }
   }
 }
 
@@ -140,4 +114,22 @@ function sendMessageToTab(action: Actions) {
   if (state.appTabId) {
     chrome.tabs.sendMessage(state.appTabId!, action);
   }
+}
+
+function extractFlowDataFromUrl(url?: string) {
+  if (!url) {
+    return;
+  }
+  const pattern =
+    /\/providers\/Microsoft\.ProcessSimple\/environments\/(.*)\/flows\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
+
+  const result = pattern.exec(url);
+  if (!result) {
+    return;
+  }
+
+  return {
+    envId: result[1],
+    flowId: result[2],
+  };
 }
