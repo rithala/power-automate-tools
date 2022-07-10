@@ -20,7 +20,7 @@ The reason behind creating this extension is constantly struggling with repetiti
 
 ## Getting started
 
-1. Get the extension from the [Chrome extensions store](https://chrome.google.com/webstore/detail/power-automate-tools/jccblbmcghkddifenlocnjfmeemjeacc)
+1. Get the extension from the [Chrome extensions store](https://chrome.google.com/webstore/detail/power-automate-tools/jccblbmcghkddifenlocnjfmeemjeacc) or [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/power-automate-tools/ecdclfoojhebjoknjoooljcakfbfpjoj)
 2. Open the flow edit page in the Power Automate portal.
 3. Click the extension icon.
 4. Edit your flow!
