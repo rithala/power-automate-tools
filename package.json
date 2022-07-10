@@ -4,11 +4,11 @@
   "description": "The Chrome/Edge extension that enables editing a Power Automate flow definition as JSON.",
   "main": "dist/app.js",
   "scripts": {
-    "build": "SET NODE_ENV=production && npm run clean && webpack",
+    "build": "cross-env NODE_ENV=production && npm run clean && webpack",
     "clean": "rimraf dist",
     "pack": "pwsh .\\scripts\\pack-extension.ps1",
     "publish": "npm run build && npm run pack",
-    "start": "SET NODE_ENV=development && webpack --watch --progress"
+    "start": "cross-env NODE_ENV=development && webpack --watch --progress"
   },
   "author": "Kamil Rithaler",
   "license": "GNU GPL v3",
@@ -17,6 +17,7 @@
     "@types/react": "^18.0.1",
     "@types/react-dom": "^18.0.0",
     "copy-webpack-plugin": "^10.2.4",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.7.1",
     "monaco-editor-webpack-plugin": "^7.0.1",
     "rimraf": "^3.0.2",
