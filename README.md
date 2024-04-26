@@ -27,6 +27,12 @@ The reason behind creating this extension is constantly struggling with repetiti
 
 ## Change Log
 
+### v1.2
+- Fixed the issue of saving a flow
+- Support for launching from the new Power Automate designer
+- Improved launching from the Power Apps Portal
+- Now the editor allows to edit the flow definition and connection references
+
 ### v1.1
 
 Added support for opening a flow from the new Power Automate portal and Power Apps portal.
