@@ -8,7 +8,7 @@ interface State {
   appTabId?: number;
   apiUrl?: string;
   tokenExpires?: Date;
-  lastMatchedRequest?: { envId: string; flowId: string };
+  lastMatchedRequest?: { envId: string; flowId: string } | null;
 }
 
 const state: State = {};
@@ -84,7 +84,7 @@ function listenFlowApiRequests(
   details: chrome.webRequest.WebRequestHeadersDetails
 ) {
   if (state.appTabId !== details.tabId) {
-    state.lastMatchedRequest = extractFlowDataFromUrl(details.url);
+    state.lastMatchedRequest = extractFlowDataFromUrl(details);
 
     const token = details.requestHeaders?.find(
       (x) => x.name.toLowerCase() === "authorization"
@@ -106,8 +106,21 @@ function listenFlowApiRequests(
     if (state.lastMatchedRequest) {
       state.initiatorTabId = details.tabId;
       chrome.action.enable();
+    } else {
+      tryExtractFlowDataFromTabUrl(details.tabId);
     }
   }
+}
+
+function tryExtractFlowDataFromTabUrl(tabId: number) {
+  chrome.tabs.get(tabId, (tab) => {
+    state.lastMatchedRequest = extractFlowDataFromTabUrl(tab.url);
+
+    if (state.lastMatchedRequest) {
+      state.initiatorTabId = tabId;
+      chrome.action.enable();
+    }
+  });
 }
 
 function sendMessageToTab(action: Actions) {
@@ -116,20 +129,48 @@ function sendMessageToTab(action: Actions) {
   }
 }
 
-function extractFlowDataFromUrl(url?: string) {
+function extractFlowDataFromTabUrl(url?: string) {
   if (!url) {
-    return;
+    return null;
+  }
+
+  const envPattern = /environments\/([a-zA-Z0-9\-]*)\//i;
+  const envResult = envPattern.exec(url);
+
+  if (!envResult) {
+    return null;
+  }
+
+  const flowPattern =
+    /flows\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
+  const flowResult = flowPattern.exec(url);
+
+  if (!flowResult) {
+    return null;
+  }
+
+  return {
+    envId: envResult[1],
+    flowId: flowResult[1],
+  };
+}
+
+function extractFlowDataFromUrl(
+  details: chrome.webRequest.WebRequestHeadersDetails
+) {
+  const requestUrl = details.url;
+  if (!requestUrl) {
+    return null;
   }
   const pattern =
     /\/providers\/Microsoft\.ProcessSimple\/environments\/(.*)\/flows\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
 
-  const result = pattern.exec(url);
-  if (!result) {
-    return;
+  const result = pattern.exec(requestUrl);
+  if (result) {
+    return {
+      envId: result[1],
+      flowId: result[2],
+    };
   }
-
-  return {
-    envId: result[1],
-    flowId: result[2],
-  };
+  return null;
 }
