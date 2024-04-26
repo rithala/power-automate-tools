@@ -1,6 +1,6 @@
 {
   "name": "power-automate-tools",
-  "version": "1.0.0",
+  "version": "1.3.0",
   "description": "The Chrome/Edge extension that enables editing a Power Automate flow definition as JSON.",
   "main": "dist/app.js",
   "scripts": {
