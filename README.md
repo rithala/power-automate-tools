@@ -4,7 +4,7 @@
 
 ![Extension Screen Shot](static/pa-tools-extension.jpg)
 
-The Chrome/Edge extension that enables editing a Power Automate flow definition as JSON.
+The Chrome/Edge extension enables editing a Power Automate flow definition as JSON.
 
 ## Motivation
 
@@ -16,16 +16,20 @@ The reason behind creating this extension is constantly struggling with repetiti
 - Workflow definition JSON schema validation.
 - Rich text manipulation features thanks to [Monaco Editor (VS Code)](https://microsoft.github.io/monaco-editor/).
 - Validating actions using "Flow Checker".
-- More features may come in future :)
+- More features may come in the future :)
 
 ## Getting started
 
-1. Get the extension from the [Chrome extensions store](https://chrome.google.com/webstore/detail/power-automate-tools/jccblbmcghkddifenlocnjfmeemjeacc)
-2. Open the flow details or edit page in the Power Automate portal.
+1. Get the extension from the [Chrome extensions store](https://chrome.google.com/webstore/detail/power-automate-tools/jccblbmcghkddifenlocnjfmeemjeacc) or [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/power-automate-tools/ecdclfoojhebjoknjoooljcakfbfpjoj)
+2. Open the flow edit page in the Power Automate portal.
 3. Click the extension icon.
 4. Edit your flow!
 
+## Change Log
+
+### v1.1
+
+Added support for opening a flow from the new Power Automate portal and Power Apps portal.
 ## Known limitations
 
-- Works only with the Power Automate portal
-- The authentication token is not refreshed automatically at this moment. Sometimes might be necessary to refresh the flow's page that was used to open the extension.
+- The authentication token is not refreshed automatically at this moment. Sometimes might be necessary to refresh the flow page that was used to open the extension.
