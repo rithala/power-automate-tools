@@ -21,6 +21,7 @@ export const FlowEditorPage: React.FC = () => {
   );
   const {
     name,
+    environment,
     definition,
     isLoading,
     saveDefinition,
@@ -45,7 +46,7 @@ export const FlowEditorPage: React.FC = () => {
             iconName: 'Edit',
           },
           onClick: async () => {
-            const savedDefinition = await saveDefinition(editor.getValue());
+            const savedDefinition = await saveDefinition(name, environment, editor.getValue());
 
             if (savedDefinition) {
               editor.setValue(savedDefinition);

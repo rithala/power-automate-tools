@@ -63,6 +63,11 @@ function initMonaco() {
         uri: 'https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json',
         schema: require('./schemas/workflowdefinition'),
       },
+      {
+        uri: 'https://power-automate-tools.local/flow-editor.json',
+        schema: require('./schemas/flow-editor'),
+        fileMatch: ['*']
+      },
     ],
   });
 

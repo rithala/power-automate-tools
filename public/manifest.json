@@ -1,7 +1,7 @@
 {
    "name": "Power Automate Tools",
    "description": "This extension enables editing a Power Automate flow definition as JSON.",
-   "version": "1.1",
+   "version": "1.2",
    "manifest_version": 3,
    "icons": {
       "512": "icons/pa-tools-512.png",
