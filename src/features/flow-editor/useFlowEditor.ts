@@ -1,13 +1,14 @@
-import { MessageBarType } from '@fluentui/react/lib/MessageBar';
-import { useEffect, useMemo, useState } from 'react';
-import { useMessageBar } from '../../common/components/Messages';
+import { MessageBarType } from "@fluentui/react/lib/MessageBar";
+import { useEffect, useMemo, useState } from "react";
+import { useMessageBar } from "../../common/components/Messages";
 import {
   IApiProvider,
   useApiProviderContext,
-} from '../../common/providers/ApiProvider';
-import { FlowError } from './types';
+} from "../../common/providers/ApiProvider";
+import { FlowError } from "./types";
 
 export const useFlowEditor = () => {
+  const editorSchema = "https://power-automate-tools.local/flow-editor.json#";
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [validationPaneIsOpen, setValidationPaneIsOpen] =
     useState<boolean>(false);
@@ -20,8 +21,8 @@ export const useFlowEditor = () => {
   const api = useApiProviderContext();
   const query = new URLSearchParams(location.search);
 
-  const envId = query.get('envId');
-  const flowId = query.get('flowId');
+  const envId = query.get("envId");
+  const flowId = query.get("flowId");
 
   const messageBar = useMessageBar();
 
@@ -29,9 +30,9 @@ export const useFlowEditor = () => {
     () => (msg: string | string[], type?: MessageBarType) => {
       messageBar.setMessages([
         {
-          key: '1',
+          key: "1",
           messageBarType: type || MessageBarType.success,
-          isMultiline: typeof msg !== 'string',
+          isMultiline: typeof msg !== "string",
           children: msg,
         },
       ]);
@@ -46,9 +47,14 @@ export const useFlowEditor = () => {
     validationResult,
     ...messageBar,
     ...(() => {
-      const [data, setData] = useState<{ name: string; definition: string }>({
-        name: '',
-        definition: '',
+      const [data, setData] = useState<{
+        name: string;
+        definition: string;
+        environment: any;
+      }>({
+        name: "",
+        definition: "",
+        environment: null,
       });
 
       useEffect(() => {
@@ -58,12 +64,22 @@ export const useFlowEditor = () => {
               setIsLoading(true);
               const flow = await api.get(`${getFlowUrl(envId, flowId)}`);
               setData({
-                definition: JSON.stringify(flow.properties.definition, null, 2),
                 name: flow.properties.displayName,
+                environment: flow.properties.environment,
+                definition: JSON.stringify(
+                  {
+                    // parameters: flow.properties.parameters,
+                    $schema: editorSchema,
+                    connectionReferences: flow.properties.connectionReferences,
+                    definition: flow.properties.definition,
+                  },
+                  null,
+                  2
+                ),
               });
             } catch (error) {
               addMessage(
-                'Error during fetching the flow definition: ' + error,
+                "Error during fetching the flow definition: " + error,
                 MessageBarType.error
               );
             } finally {
@@ -75,20 +91,57 @@ export const useFlowEditor = () => {
 
       return data;
     })(),
-    saveDefinition: async (definition: string) => {
+    saveDefinition: async (
+      name: string,
+      environment: any,
+      definition: string
+    ) => {
       let retVal: string | null = null;
+      const data = JSON.parse(definition);
+
+      if (!data.definition) {
+        addMessage('Missing "definition" flow property', MessageBarType.error);
+        return;
+      }
+
+      if (!data.connectionReferences) {
+        addMessage(
+          'Missing "connectionReferences" flow property',
+          MessageBarType.error
+        );
+        return;
+      }
+
+      // if (!data.parameters) {
+      //   addMessage('Missing "parameters" flow property', MessageBarType.error);
+      //   return;
+      // }
+
       try {
         setIsLoading(true);
+
         const response = await api.patch(`${getFlowUrl(envId, flowId)}`, {
           properties: {
-            definition: JSON.parse(definition),
+            displayName: name,
+            environment: environment,
+            definition: data.definition,
+            connectionReferences: data.connectionReferences,
+            // parameters: data.parameters,
           },
         });
-        retVal = JSON.stringify(response.properties.definition, null, 2);
-        addMessage('The flow definition was saved successfully.');
+        retVal = JSON.stringify(
+          {
+            $schema: editorSchema,
+            connectionReferences: response.properties.connectionReferences,
+            definition: response.properties.definition,
+          },
+          null,
+          2
+        );
+        addMessage("The flow definition was saved successfully.");
       } catch (error) {
         addMessage(
-          'Error during saving the flow definition: ' + error,
+          "Error during saving the flow definition: " + error,
           MessageBarType.error
         );
       } finally {
@@ -104,7 +157,7 @@ export const useFlowEditor = () => {
           `${getFlowUrl(envId, flowId)}/checkFlowErrors`,
           {
             properties: {
-              definition: JSON.parse(definition),
+              definition: JSON.parse(definition).definition,
             },
           }
         );
@@ -113,7 +166,7 @@ export const useFlowEditor = () => {
           `${getFlowUrl(envId, flowId)}/checkFlowWarnings`,
           {
             properties: {
-              definition: JSON.parse(definition),
+              definition: JSON.parse(definition).definition,
             },
           }
         );
@@ -121,7 +174,7 @@ export const useFlowEditor = () => {
         setValidationPaneIsOpen(true);
       } catch (error) {
         addMessage(
-          'Error during validation of the flow definition: ' + error,
+          "Error during validation of the flow definition: " + error,
           MessageBarType.error
         );
       } finally {
