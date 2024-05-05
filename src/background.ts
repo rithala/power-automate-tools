@@ -1,5 +1,5 @@
 import { Actions } from "./common/types/backgroundActions";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 interface State {
   token?: string;
