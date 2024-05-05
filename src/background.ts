@@ -1,40 +1,50 @@
+import { SharedStateClient } from "./common/shared-state";
 import { Actions } from "./common/types/backgroundActions";
 import { jwtDecode } from "jwt-decode";
 
-interface State {
-  token?: string;
-  url?: URL;
-  initiatorTabId?: number;
-  appTabId?: number;
-  apiUrl?: string;
-  tokenExpires?: Date;
-  lastMatchedRequest?: { envId: string; flowId: string } | null;
-}
-
-const state: State = {};
-
-chrome.action.disable();
+const flowTabStates: { [parentTabId: number]: SharedStateClient } = {};
+const appTabs: { [appTabId: number]: number } = {};
+const parentTabs: { [parentTabId: number]: number } = {};
 
 chrome.action.onClicked.addListener((tab) => {
-  if (!state.lastMatchedRequest) {
-    return;
-  }
+  const flowInfo = extractFlowInfoFromTabUrl(tab.url);
 
-  chrome.tabs.create(
-    {
-      url: `${chrome.runtime.getURL("app.html")}?envId=${
-        state.lastMatchedRequest.envId
-      }&flowId=${state.lastMatchedRequest.flowId}`,
-    },
-    (appTab) => {
-      state.appTabId = appTab.id;
-    }
-  );
+  if (flowInfo && flowTabStates[tab.id!] && !parentTabs[tab.id!]) {
+    const state = flowTabStates[tab.id!];
+
+    state.changeState({
+      environmentId: flowInfo.envId,
+      currentTabFlowId: flowInfo.flowId,
+    });
+
+    chrome.tabs.create(
+      {
+        url: `${chrome.runtime.getURL(
+          "app.html"
+        )}?${state.toUrlParameter()}`,
+      },
+      (appTab) => {
+        appTabs[appTab.id!] = tab.id!;
+        parentTabs[tab.id!] = appTab.id!;
+      }
+    );
+  }
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => {
-  if (state.appTabId === tabId) {
-    delete state.appTabId;
+  if (appTabs[tabId]) {
+    delete parentTabs[appTabs[tabId]];
+    delete appTabs[tabId];
+  }
+});
+
+chrome.tabs.onUpdated.addListener((tabId, change) => {
+  if (
+    change.url &&
+    extractFlowInfoFromTabUrl(change.url) &&
+    !flowTabStates[tabId]
+  ) {
+    flowTabStates[tabId] = new SharedStateClient();
   }
 });
 
@@ -46,90 +56,98 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
   ["requestHeaders"]
 );
 
-chrome.runtime.onMessage.addListener(
-  (action: Actions, sender, sendResponse) => {
-    if (sender.tab?.id === state.appTabId) {
-      switch (action.type) {
-        default:
-          sendResponse();
-          break;
-        case "app-loaded":
-          sendResponse();
-          sendTokenChanged();
-          break;
-        case "refresh":
-          sendResponse();
-          refreshInitiator();
-          break;
-      }
-    }
-  }
+chrome.webRequest.onBeforeSendHeaders.addListener(
+  listenDynamicsApiRequests,
+  {
+    urls: ["https://*.api.crm4.dynamics.com/*"],
+  },
+  ["requestHeaders"]
 );
 
-function sendTokenChanged() {
-  sendMessageToTab({
-    type: "token-changed",
-    token: state.token!,
-    apiUrl: state.apiUrl!,
-  });
-}
-
-function refreshInitiator() {
-  if (state.initiatorTabId) {
-    chrome.tabs.reload(state.initiatorTabId);
+chrome.runtime.onMessage.addListener((action: Actions, sender) => {
+  switch (action.type) {
+    default:
+      break;
+    case "refresh":
+      if (sender.tab?.id && appTabs[sender.tab.id]) {
+        chrome.tabs.reload(appTabs[sender.tab.id]);
+      }
+      break;
   }
-}
+});
 
 function listenFlowApiRequests(
   details: chrome.webRequest.WebRequestHeadersDetails
 ) {
-  if (state.appTabId !== details.tabId) {
-    state.lastMatchedRequest = extractFlowDataFromUrl(details);
+  if (!flowTabStates[details.tabId]) {
+    flowTabStates[details.tabId] = new SharedStateClient();
+  }
 
-    const token = details.requestHeaders?.find(
-      (x) => x.name.toLowerCase() === "authorization"
-    )?.value;
+  const stateClient = flowTabStates[details.tabId];
+  const state = stateClient.getState();
+  const extractedToken = extractToken(details);
 
-    if (state.token !== token) {
-      state.token = token;
-
-      const decodedToken = jwtDecode(token!);
-
-      state.tokenExpires = new Date((decodedToken as any).exp * 1000);
-
-      const url = new URL(details.url);
-      state.apiUrl = `${url.protocol}//${url.hostname}/`;
-
-      sendTokenChanged();
-    }
-
-    if (state.lastMatchedRequest) {
-      state.initiatorTabId = details.tabId;
-      chrome.action.enable();
-    } else {
-      tryExtractFlowDataFromTabUrl(details.tabId);
-    }
+  if (
+    extractedToken &&
+    (state.flowApiUrl !== extractedToken?.apiUrl ||
+      state.flowApiToken !== extractedToken.token)
+  ) {
+    stateClient.changeState({
+      flowApiUrl: extractedToken?.apiUrl,
+      flowApiToken: extractedToken?.token,
+      flowApiTokenExpires: extractedToken?.expires,
+    });
   }
 }
 
-function tryExtractFlowDataFromTabUrl(tabId: number) {
-  chrome.tabs.get(tabId, (tab) => {
-    state.lastMatchedRequest = extractFlowDataFromTabUrl(tab.url);
+function listenDynamicsApiRequests(
+  details: chrome.webRequest.WebRequestHeadersDetails
+) {
+  if (!flowTabStates[details.tabId]) {
+    flowTabStates[details.tabId] = new SharedStateClient();
+  }
 
-    if (state.lastMatchedRequest) {
-      state.initiatorTabId = tabId;
-      chrome.action.enable();
-    }
-  });
-}
+  const stateClient = flowTabStates[details.tabId];
+  const state = stateClient.getState();
+  const extractedToken = extractToken(details);
 
-function sendMessageToTab(action: Actions) {
-  if (state.appTabId) {
-    chrome.tabs.sendMessage(state.appTabId!, action);
+  if (
+    extractedToken &&
+    (state.dynamicsEnvUrl !== extractedToken?.apiUrl ||
+      state.dynamicsApiToken !== extractedToken.token)
+  ) {
+    stateClient.changeState({
+      dynamicsEnvUrl: extractedToken?.apiUrl,
+      dynamicsApiToken: extractedToken?.token,
+      dynamicsApiTokenExpires: extractedToken?.expires,
+    });
   }
 }
 
-function extractFlowDataFromTabUrl(url?: string) {
+function extractToken(details: chrome.webRequest.WebRequestHeadersDetails) {
+  const token = details.requestHeaders?.find(
+    (x) => x.name.toLowerCase() === "authorization"
+  )?.value;
+
+  if (!token) {
+    return null;
+  }
+
+  const decodedToken = jwtDecode(token);
+
+  const expires = new Date((decodedToken as any).exp * 1000);
+
+  const url = new URL(details.url);
+  const apiUrl = `${url.protocol}//${url.hostname}/`;
+
+  return {
+    apiUrl,
+    token,
+    expires,
+  };
+}
+
+function extractFlowInfoFromTabUrl(url?: string) {
   if (!url) {
     return null;
   }
@@ -145,32 +163,8 @@ function extractFlowDataFromTabUrl(url?: string) {
     /flows\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
   const flowResult = flowPattern.exec(url);
 
-  if (!flowResult) {
-    return null;
-  }
-
   return {
     envId: envResult[1],
-    flowId: flowResult[1],
+    flowId: flowResult ? flowResult[1] : null,
   };
-}
-
-function extractFlowDataFromUrl(
-  details: chrome.webRequest.WebRequestHeadersDetails
-) {
-  const requestUrl = details.url;
-  if (!requestUrl) {
-    return null;
-  }
-  const pattern =
-    /\/providers\/Microsoft\.ProcessSimple\/environments\/(.*)\/flows\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
-
-  const result = pattern.exec(requestUrl);
-  if (result) {
-    return {
-      envId: result[1],
-      flowId: result[2],
-    };
-  }
-  return null;
 }
