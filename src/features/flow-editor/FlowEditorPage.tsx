@@ -11,8 +11,14 @@ import { Messages } from '../../common/components/Messages';
 import { FlowValidationResult } from './FlowValidationResult';
 import { useFlowEditor } from './useFlowEditor';
 
+const prefersDark =
+  typeof window !== 'undefined' &&
+  window.matchMedia &&
+  window.matchMedia('(prefers-color-scheme: dark)').matches;
+
 const editorContainerClassName = mergeStyles({
   flex: 1,
+  backgroundColor: prefersDark ? '#1e1e1e' : '#ffffff',
 });
 
 export const FlowEditorPage: React.FC = () => {
@@ -81,6 +87,7 @@ export const FlowEditorPage: React.FC = () => {
           <Editor
             defaultValue={definition}
             language="json"
+            theme={prefersDark ? 'vs-dark' : 'vs-light'}
             onMount={(editor) => setEditor(editor)}
           />
         </div>
