@@ -142,7 +142,7 @@ function extractFlowDataFromTabUrl(url?: string) {
   }
 
   const flowPattern =
-    /flows\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
+    /flows\/(?:shared\/)?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
   const flowResult = flowPattern.exec(url);
 
   if (!flowResult) {
@@ -163,7 +163,7 @@ function extractFlowDataFromUrl(
     return null;
   }
   const pattern =
-    /\/providers\/Microsoft\.ProcessSimple\/environments\/(.*)\/flows\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
+    /\/providers\/Microsoft\.ProcessSimple\/environments\/(.*)\/flows\/(?:shared\/)?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}){1}/i;
 
   const result = pattern.exec(requestUrl);
   if (result) {
