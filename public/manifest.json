@@ -17,6 +17,7 @@
    "host_permissions": [
       "*://*.flow.microsoft.com/",
       "*://*.make.powerautomate.com/",
+      "*://*.make.gov.powerautomate.us/",
       "*://*.make.powerapps.com/",
       "https://login.microsoftonline.com/"
    ],
