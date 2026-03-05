@@ -27,6 +27,11 @@ The reason behind creating this extension is constantly struggling with repetiti
 
 ## Change Log
 
+### v1.3
+- Migrated to the new Power Platform API (`*.api.powerplatform.com`)
+- Fixed flow detection for solution flows and multiple environments
+- Per-tab state tracking for auth tokens and API URLs
+
 ### v1.2
 - Fixed the issue of saving a flow
 - Support for launching from the new Power Automate designer
