@@ -2,7 +2,6 @@ import { MessageBarType } from "@fluentui/react/lib/MessageBar";
 import { useEffect, useMemo, useState } from "react";
 import { useMessageBar } from "../../common/components/Messages";
 import {
-  IApiProvider,
   useApiProviderContext,
 } from "../../common/providers/ApiProvider";
 import { FlowError } from "./types";
@@ -62,7 +61,7 @@ export const useFlowEditor = () => {
           if (envId && flowId) {
             try {
               setIsLoading(true);
-              const flow = await api.get(`${getFlowUrl(envId, flowId)}`);
+              const flow = await api.get(`${getFlowUrl(flowId)}`);
               setData({
                 name: flow.properties.displayName,
                 environment: flow.properties.environment,
@@ -120,7 +119,7 @@ export const useFlowEditor = () => {
       try {
         setIsLoading(true);
 
-        const response = await api.patch(`${getFlowUrl(envId, flowId)}`, {
+        const response = await api.patch(`${getFlowUrl(flowId)}`, {
           properties: {
             displayName: name,
             environment: environment,
@@ -151,10 +150,19 @@ export const useFlowEditor = () => {
       return retVal;
     },
     validate: async (definition: string) => {
+      if (!api.hasLegacyApi) {
+        addMessage(
+          "Validation is not available yet. Please open a flow in the Power Automate designer first to enable the legacy API endpoint, then try again.",
+          MessageBarType.warning
+        );
+        return;
+      }
+
       try {
         setIsLoading(true);
-        const errors: FlowError[] = await api.post(
-          `${getFlowUrl(envId, flowId)}/checkFlowErrors`,
+        const legacyFlowUrl = getLegacyFlowUrl(envId, flowId);
+        const errors: FlowError[] = await api.legacyPost(
+          `${legacyFlowUrl}/checkFlowErrors`,
           {
             properties: {
               definition: JSON.parse(definition).definition,
@@ -162,8 +170,8 @@ export const useFlowEditor = () => {
           }
         );
 
-        const warnings: FlowError[] = await api.post(
-          `${getFlowUrl(envId, flowId)}/checkFlowWarnings`,
+        const warnings: FlowError[] = await api.legacyPost(
+          `${legacyFlowUrl}/checkFlowWarnings`,
           {
             properties: {
               definition: JSON.parse(definition).definition,
@@ -184,6 +192,10 @@ export const useFlowEditor = () => {
   };
 };
 
-function getFlowUrl(envId: string | null, flowId: string | null) {
+function getFlowUrl(flowId: string | null) {
+  return `powerautomate/flows/${flowId}`;
+}
+
+function getLegacyFlowUrl(envId: string | null, flowId: string | null) {
   return `providers/Microsoft.ProcessSimple/environments/${envId}/flows/${flowId}`;
 }
